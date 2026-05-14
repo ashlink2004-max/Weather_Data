@@ -24,3 +24,9 @@ CREATE OR REPLACE TABLE weather1_table (
 COPY INTO weather1_table(data)
 FROM @my_stage
 FILE_FORMAT = (TYPE = JSON);
+
+ALTER PIPE weather_pipe REFRESH;
+
+SHOW PIPES;
+
+DESC PIPE weather_pipe;
