@@ -8,14 +8,12 @@ table = dynamodb.Table('weather-data-1')
 
 API_KEY = "your_api_key"
 def lambda_handler(event, context):
+    city = "Kochi"
 
-city = "Kochi"
+    url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"    
 
-url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"    
-
-response = urllib.request.urlopen(url)
-data = json.loads(response.read())
-
+    response = urllib.request.urlopen(url)
+    data = json.loads(response.read())
 
     table.put_item(
         Item={
@@ -26,7 +24,7 @@ data = json.loads(response.read())
         }
     )
 
-return {
+    return {
         'statusCode': 200,
         'body': json.dumps('Weather data inserted')
     }
