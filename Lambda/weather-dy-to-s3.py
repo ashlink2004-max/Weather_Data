@@ -24,3 +24,6 @@ for record in event['Records']:
         )
 
         print(response)
+    return {
+        'statusCode': 200
+    }
