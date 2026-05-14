@@ -5,3 +5,5 @@ from datetime import datetime
 
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table('weather-data-1')
+
+API_KEY = "your_api_key"
