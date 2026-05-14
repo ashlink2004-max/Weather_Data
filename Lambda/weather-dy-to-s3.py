@@ -25,3 +25,8 @@ data = json.loads(response.read())
             'timestamp': datetime.now().isoformat()
         }
     )
+
+return {
+        'statusCode': 200,
+        'body': json.dumps('Weather data inserted')
+    }
