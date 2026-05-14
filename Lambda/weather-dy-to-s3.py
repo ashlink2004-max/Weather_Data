@@ -1,30 +1,26 @@
 import json
-import urllib.request
 import boto3
 from datetime import datetime
+s3 = boto3.client('s3')
 
-dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table('weather-data-1')
+BUCKET_NAME = 'weather-lamb-project1'
 
-API_KEY = "your_api_key"
-def lambda_handler(event, context):
-    city = "Kochi"
+print(event)
 
-    url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"    
+for record in event['Records']:
 
-    response = urllib.request.urlopen(url)
-    data = json.loads(response.read())
+        new_image = record['dynamodb'].get('NewImage', {})
 
-    table.put_item(
-        Item={
-            'city': city,
-            'temperature': str(data['main']['temp']),
-            'weather': data['weather'][0]['description'],
-            'timestamp': datetime.now().isoformat()
-        }
-    )
+        data = {}
 
-    return {
-        'statusCode': 200,
-        'body': json.dumps('Weather data inserted')
-    }
+        for key, value in new_image.items():
+            data[key] = list(value.values())[0]
+            file_name = f"weather_{datetime.now()}.json"
+
+        response = s3.put_object(
+            Bucket=BUCKET_NAME,
+            Key=file_name,
+            Body=json.dumps(data,indent=4)
+        )
+
+        print(response)
